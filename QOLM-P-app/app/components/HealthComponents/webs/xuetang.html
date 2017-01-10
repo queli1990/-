@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<header>
+    <meta charset="utf-8">
+    <script src="echarts.js"></script>
+
+<style>
+body {margin:0;}
+ul.topnav {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+    display:block;
+    width:100%;
+    text-align:center;
+}
+
+ul.topnav li {
+    display: inline-block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+ul.midnav {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  display:block;
+  width:100%;
+  text-align:center;
+}
+
+ul.midnav li {
+    display: inline-block;
+    color: #000000;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+</style>
+
+</header>
+<body>
+
+<ul class="topnav" id="myTopnav">
+  <li>血糖测量<span id=time><SCRIPT>var d = new Date();document.getElementById('time').innerHTML=d.getFullYear() + "-" +(d.getMonth() + 1) + "-" + d.getDate();</SCRIPT>  
+</span></li>
+</ul>
+
+<ul class="midnav">
+  <li>晚餐血糖</li>
+  <li>睡前血糖</li>
+  <li>早餐血糖</li>
+  <li>午餐血糖</li>
+</ul>
+
+
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="height:400px;"></div>
+    <h1 style="text-align:center;color:red">偏低</h1>
+    <p style="text-align:center">正常范围:睡前/餐前:4.4-6.9,餐后4.4-9.9</p>
+
+
+    <script type="text/javascript">
+
+    Date.prototype.yyyymmdd = function() {
+      var mm = this.getMonth() + 1; // getMonth() is zero-based
+      var dd = this.getDate();
+
+      return [this.getFullYear(), !mm[1] && '0', mm, !dd[1] && '0', dd].join(''); // padding
+    };
+
+    var date = new Date();
+
+
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        var timeTicket;
+
+option = {
+    tooltip : {
+        formatter: "{a} <br/>{b} : {c}%"
+    },
+    toolbox: {
+        show : false,
+        feature : {
+            mark : {show: true},
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    series : [
+        {
+            name:'个性化仪表盘',
+            type:'gauge',
+            center : ['50%', '50%'],    // 默认全局居中
+            radius : [0, '75%'],
+            startAngle: 45,
+            endAngle : -315,
+            min: 0,                     // 最小值
+            max: 100,                   // 最大值
+            precision: 0,               // 小数精度，默认为0，无小数点
+            splitNumber: 8,             // 分割段数，默认为5
+            axisLine: {            // 坐标轴线
+                show: true,        // 默认显示，属性show控制显示与否
+                lineStyle: {       // 属性lineStyle控制线条样式
+                    color: [[0.25, '#01aaad'],[0.5, '#23b14b'],[0.75, '#a6ce39'],[1, '#fed403'],], 
+                    width: 30
+                }
+            },
+            axisTick: {            // 坐标轴小标记
+                show: false,        // 属性show控制显示与否，默认不显示
+                splitNumber: 5,    // 每份split细分多少段
+                length :8,         // 属性length控制线长
+                lineStyle: {       // 属性lineStyle控制线条样式
+                    color: '#eee',
+                    width: 1,
+                    type: 'solid'
+                }
+            },
+            axisLabel: {           // 坐标轴文本标签，详见axis.axisLabel
+                show: true,
+                formatter: function(v){
+                    switch (v+''){
+                        case '12.5': return '晚餐血糖';
+                        case '25': return '';
+                        case '37.5': return '睡前血糖';
+                        case '50': return '';
+                        case '62.5': return '早餐血糖';
+                        case '75': return '';
+                        case '87.5': return '午餐血糖';
+                        case '100': return '';
+                        default: return '';
+                    }
+                },
+                textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                    color: '#333'
+                }
+            },
+            splitLine: {           // 分隔线
+                show: false,        // 默认显示，属性show控制显示与否
+                length :30,         // 属性length控制线长
+                lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                    color: '#eee',
+                    width: 2,
+                    type: 'solid'
+                }
+            },
+            pointer : {
+                show: false,
+                offsetCenter: ['0%', '30%'], 
+                length : '40%',
+                width : 16,
+                color : 'auto'
+            },
+            title : {
+                show : true,
+                offsetCenter: ['0%', '0%'],       // x, y，单位px
+                textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                    color: 'blue',
+                    fontSize : 25
+                }
+            },
+            detail : {
+                show : false,
+                backgroundColor: 'rgba(0,0,0,0)',
+                borderWidth: 0,
+                borderColor: '#ccc',
+                width: 100,
+                height: 40,
+                offsetCenter: ['0%', '0%'],       // x, y，单位px
+                formatter:'',
+                textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                    color: 'auto',
+                    fontSize : 30
+                }
+            },
+            data:[{value: 50, name: '1.2mmol'}]
+        }
+    ]
+};
+
+
+    option.series[0].data[0].value = 25;
+    myChart.setOption(option);
+
+    </script>
+</body>
+</html>

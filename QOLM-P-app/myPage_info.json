@@ -1,0 +1,29 @@
+{
+  "data" : [
+    {
+       "icon" : "icon1",
+       "title" : "个人信息"
+    },
+    {
+      "icon" : "icon2",
+      "title" : "个人健康档案"
+    },
+    {
+      "icon" : "icon3",
+      "title" : "体检信息"
+    },
+    {
+      "icon" : "icon4",
+      "title" : "收藏"
+    },
+    {
+      "icon" : "icon5",
+      "title" : "我的卡卷"
+    },
+    {
+      "icon" : "icon6",
+      "title" : "设置"
+    },
+
+  ]
+}
